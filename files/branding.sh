@@ -3,16 +3,16 @@
 
 set -xeuo pipefail
 
-rm -rf \
-    /usr/share/plasma/look-and-feel/org.fedoraproject.fedora.desktop
-rm -rf \
-    /usr/share/wallpapers/fedora
-rm -rf \
-    /usr/share/wallpapers/Fedora
-rm -rf \
-    /usr/share/wallpapers/F4*
-rm -rf \
-    /usr/share/backgrounds/*
+# rm -rf \
+#     /usr/share/plasma/look-and-feel/org.fedoraproject.fedora.desktop
+# rm -rf \
+#     /usr/share/wallpapers/fedora
+# rm -rf \
+#     /usr/share/wallpapers/Fedora
+# rm -rf \
+#     /usr/share/wallpapers/F4*
+# rm -rf \
+#     /usr/share/backgrounds/*
 
 sed -i 's,AlmaLinux,HeliumOS,g' \
     /usr/lib/os-release
