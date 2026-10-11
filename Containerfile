@@ -6,11 +6,6 @@ ARG PLAYBOOK
 
 LABEL containers.bootc=1
 
-RUN rm -f /usr/share/rpm/rpmdb.sqlite-shm /usr/share/rpm/rpmdb.sqlite-wal; \
-    rpm --rebuilddb || true; \
-    new="$(ls -d /usr/share/rpmrebuilddb.* | head -1)"; \
-    rm -rf /usr/share/rpm && mv "$new" /usr/share/rpm
-
 RUN dnf update -y
 RUN dnf install -y ansible-core
 
