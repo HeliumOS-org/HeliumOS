@@ -23,7 +23,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            podman
+            podman \
+            skopeo
 
       - name: Build image
         id: build
@@ -55,8 +56,4 @@ jobs:
           IS_EDGE: ${{ matrix.is_edge }}
           VERSION: ${{ matrix.version }}
         run: |
-          # RECHUNKED_IMAGE=$(sudo podman pull ${{ steps.rechunk.outputs.ref }})
-
-          # sudo podman image tag ${RECHUNKED_IMAGE} ${{ steps.build.outputs.IMAGE }}:${{ steps.build.outputs.TAG }}
-
           make push VERSION=${VERSION} IS_CANARY=${IS_CANARY} IS_EDGE=${IS_EDGE}
