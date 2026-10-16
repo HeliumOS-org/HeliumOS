@@ -1,17 +1,17 @@
-# - ansible.builtin.import_tasks: ../base/dnf-config.yaml
-# - ansible.builtin.import_tasks: ../base/addons.yaml
+- ansible.builtin.import_tasks: ../base/dnf-config.yaml
+- ansible.builtin.import_tasks: ../base/addons.yaml
 - ansible.builtin.import_tasks: ../base/bootc-tweaks.yaml
-# - ansible.builtin.import_tasks: ../base/epel-repo.yaml
-# - ansible.builtin.import_tasks: ../base/appimage-compat.yaml
-# - ansible.builtin.import_tasks: ../base/dev-tools.yaml
-# - ansible.builtin.import_tasks: ../base/docker.yaml
-# - ansible.builtin.import_tasks: ../base/firewall.yaml
-# - ansible.builtin.import_tasks: ../base/flatpak.yaml
-# - ansible.builtin.import_tasks: ../base/gaming-hardware-compat.yaml
-# - ansible.builtin.import_tasks: ../base/kde-plasma.yaml
-# - ansible.builtin.import_tasks: ../base/selinux.yaml
-# - ansible.builtin.import_tasks: ../base/shell.yaml
-# - ansible.builtin.import_tasks: ../base/branding.yaml
-# - ansible.builtin.import_tasks: ../base/time-fix.yaml
-# - ansible.builtin.import_tasks: ../base/kdump.yaml
-# - ansible.builtin.import_tasks: ../base/nix.yaml
+- ansible.builtin.import_tasks: ../base/epel-repo.yaml
+- ansible.builtin.import_tasks: ../base/appimage-compat.yaml
+- ansible.builtin.import_tasks: ../base/dev-tools.yaml
+- ansible.builtin.import_tasks: ../base/docker.yaml
+- ansible.builtin.import_tasks: ../base/firewall.yaml
+- ansible.builtin.import_tasks: ../base/flatpak.yaml
+- ansible.builtin.import_tasks: ../base/gaming-hardware-compat.yaml
+- ansible.builtin.import_tasks: ../base/kde-plasma.yaml
+- ansible.builtin.import_tasks: ../base/selinux.yaml
+- ansible.builtin.import_tasks: ../base/shell.yaml
+- ansible.builtin.import_tasks: ../base/branding.yaml
+- ansible.builtin.import_tasks: ../base/time-fix.yaml
+- ansible.builtin.import_tasks: ../base/kdump.yaml
+- ansible.builtin.import_tasks: ../base/nix.yaml

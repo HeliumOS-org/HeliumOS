@@ -20,10 +20,9 @@
     dest: /usr/lib/systemd/system/nix.mount
 
 - name: Enable /nix mount
-  ansible.builtin.file:
-    src: /usr/lib/systemd/system/nix.mount
-    dest: /etc/systemd/system/multi-user.target.wants/nix.mount
-    state: link
+  ansible.builtin.systemd_service:
+    name: nix.mount
+    enabled: true
 
 - name: Create /etc/nix directory
   ansible.builtin.file:

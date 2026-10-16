@@ -1,8 +1,7 @@
 - name: Install KDE Plasma Desktop
   ansible.builtin.dnf:
     name:
-      # - "@kde-desktop-environment"
-      # - sddm-breeze
+      - "@kde-desktop-environment"
       - qt6-qtlocation
       - angelfish
       - kcalc
@@ -38,47 +37,45 @@
     name:
       - krfb
 
-# - name: Enable SDDM
-#   ansible.builtin.file:
-#     src: /usr/lib/systemd/system/sddm.service
-#     dest: /etc/systemd/system/multi-user.target.wants/sddm.service
-#     state: link
-#     force: true
+- name: Enable SDDM
+  ansible.builtin.systemd_service:
+    name: sddm
+    enabled: true
 
 - name: Disable Cockpit
+  ansible.builtin.systemd_service:
+    name: cockpit.socket
+    enabled: false
+
+- name: Create script for /usr/share/sddm/themes overlay
+  ansible.builtin.copy:
+    content: |
+      #!/usr/bin/env bash
+      umount \
+        /usr/share/sddm/themes
+      mkdir -p \
+        /var/usr_share_sddm_themes
+      mkdir -p \
+        /var/usr_share_sddm_themes_work
+      mount -t overlay overlay \
+        -o lowerdir=/usr/share/sddm/themes,upperdir=/var/usr_share_sddm_themes,workdir=/var/usr_share_sddm_themes_work \
+        /usr/share/sddm/themes
+    dest: /usr/bin/heliumos-usr-share-sddm-themes-overlay
+    mode: "0755"
+
+- name: Create service for /usr/share/sddm/themes overlay
+  ansible.builtin.copy:
+    content: |
+      [Unit]
+      Description=Setup /usr/share/sddm/themes overlay
+
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/bin/bash -c '/usr/bin/heliumos-usr-share-sddm-themes-overlay'
+    dest: /usr/lib/systemd/system/heliumos-usr-share-sddm-themes-overlay.service
+
+- name: Enable service for /usr/share/sddm/themes overlay
   ansible.builtin.file:
-    path: /etc/systemd/system/sockets.target.wants/cockpit.socket
-    state: absent
-
-# - name: Create script for /usr/share/sddm/themes overlay
-#   ansible.builtin.copy:
-#     content: |
-#       #!/usr/bin/env bash
-#       umount \
-#         /usr/share/sddm/themes
-#       mkdir -p \
-#         /var/usr_share_sddm_themes
-#       mkdir -p \
-#         /var/usr_share_sddm_themes_work
-#       mount -t overlay overlay \
-#         -o lowerdir=/usr/share/sddm/themes,upperdir=/var/usr_share_sddm_themes,workdir=/var/usr_share_sddm_themes_work \
-#         /usr/share/sddm/themes
-#     dest: /usr/bin/heliumos-usr-share-sddm-themes-overlay
-#     mode: "0755"
-
-# - name: Create service for /usr/share/sddm/themes overlay
-#   ansible.builtin.copy:
-#     content: |
-#       [Unit]
-#       Description=Setup /usr/share/sddm/themes overlay
-#
-#       [Service]
-#       Type=oneshot
-#       ExecStart=/usr/bin/bash -c '/usr/bin/heliumos-usr-share-sddm-themes-overlay'
-#     dest: /usr/lib/systemd/system/heliumos-usr-share-sddm-themes-overlay.service
-
-# - name: Enable service for /usr/share/sddm/themes overlay
-#   ansible.builtin.file:
-#     src: /usr/lib/systemd/system/heliumos-usr-share-sddm-themes-overlay.service
-#     dest: /etc/systemd/system/multi-user.target.wants/heliumos-usr-share-sddm-themes-overlay.service
-#     state: link
+    src: /usr/lib/systemd/system/heliumos-usr-share-sddm-themes-overlay.service
+    dest: /etc/systemd/system/multi-user.target.wants/heliumos-usr-share-sddm-themes-overlay.service
+    state: link

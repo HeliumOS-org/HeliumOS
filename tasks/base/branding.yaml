@@ -1,19 +1,16 @@
 - name: Branding
   ansible.builtin.script: /workdir/files/branding.sh
 
-# - name: Configure SDDM theme background
-#   shell:
-#     cmd: |
-#       sed -i \
-#         's,^background=.*$,background=/usr/share/wallpapers/Andromeda/contents/images/5338x5905.jpg,g' \
-#         /usr/share/sddm/themes/breeze/theme.conf
+- name: Configure SDDM theme
+  shell:
+    cmd: |
+      sed -i \
+        's,#Current=01-breeze-fedora,Current=breeze,g' \
+        /etc/sddm.conf
 
-# - name: Configure SDDM theme
-#   ansible.builtin.copy:
-#     content: |
-#       [Theme]
-#       Current=breeze
-#     dest: /etc/sddm.conf
+      sed -i \
+        's,/usr/share/wallpapers/Next/contents/images/5120x2880.png,/usr/share/wallpapers/Andromeda/contents/images/5338x5905.jpg,g' \
+        /usr/share/sddm/themes/breeze/theme.conf
 
 - name: Add EULA directories
   ansible.builtin.file:

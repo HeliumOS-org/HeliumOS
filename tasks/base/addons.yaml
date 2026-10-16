@@ -5,10 +5,9 @@
       ln -s /var/usraddons /usr/addons
 
 - name: Enable HeliumOS Addons service
-  ansible.builtin.file:
-    src: /usr/lib/systemd/system/heliumos-addons.service
-    dest: /etc/systemd/system/multi-user.target.wants/heliumos-addons.service
-    state: link
+  ansible.builtin.systemd_service:
+    name: heliumos-addons
+    enabled: true
     
 # - name: Libraries for Addons
 #   ansible.builtin.dnf:

@@ -1,13 +1,5 @@
 - name: Rebuild initramfs
   shell:
     cmd: |
-      # Pick the newest kernel by RPM version order (sort -V misorders e.g. el10 vs el10_1)
-      kver=""
-      for k in /usr/lib/modules/*; do
-        k="${k##*/}"
-        if [ -z "$kver" ] || [ "$(rpm --eval "%{lua:print(rpm.vercmp('$k','$kver'))}")" -gt 0 ]; then
-          kver="$k"
-        fi
-      done
-      find /usr/lib/modules -mindepth 1 -maxdepth 1 ! -name "$kver" -exec rm -rf {} +
+      kver=$(cd /usr/lib/modules && echo * | awk '{print $1}')
       dracut -vf /usr/lib/modules/$kver/initramfs.img $kver

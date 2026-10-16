@@ -29,7 +29,7 @@ echo-tag:
 
 image:
 	$(PODMAN) build \
-		--build-arg BASE=quay.io/almalinuxorg/atomic-desktop-kde:$(VERSION) \
+		--build-arg BASE=quay.io/almalinuxorg/almalinux-bootc:$(VERSION) \
 		--build-arg PLAYBOOK=$(PLAYBOOK).yaml \
 		--network host \
 		-f Containerfile \
