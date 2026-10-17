@@ -42,6 +42,8 @@ RECHUNK_TAG := chunked
 rechunk:
 	$(SUDO) rm -rf $(RECHUNK_DIR)
 	mkdir -p $(RECHUNK_DIR)
+	echo '{"imageLayoutVersion":"1.0.0"}' > $(RECHUNK_DIR)/oci-layout
+	echo '{"schemaVersion":2,"manifests":[]}' > $(RECHUNK_DIR)/index.json
 	$(PODMAN) run \
 		--rm \
 		--privileged \
