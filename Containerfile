@@ -16,7 +16,7 @@ RUN cp -rf /workdir/files/* /
 
 RUN ansible-playbook /workdir/playbooks/${PLAYBOOK}
 
-RUN dnf remove -y ansible-core && dnf clean all
+# RUN dnf remove -y ansible-core && dnf clean all
 RUN rm -rdf /workdir /var/log
 
 RUN bootc container lint
