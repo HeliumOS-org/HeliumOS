@@ -27,8 +27,8 @@
 - name: Install Kvantum
   ansible.builtin.dnf:
     name:
-      - https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Everything/x86_64/os/Packages/k/kvantum-1.1.3-2.fc42.x86_64.rpm
-      - https://dl.fedoraproject.org/pub/fedora/linux/releases/42/Everything/x86_64/os/Packages/k/kvantum-data-1.1.3-2.fc42.noarch.rpm
+      - https://dl.fedoraproject.org/pub/fedora/linux/releases/44/Everything/x86_64/os/Packages/k/kvantum-1.1.6-1.fc44.x86_64.rpm
+      - https://dl.fedoraproject.org/pub/fedora/linux/releases/44/Everything/x86_64/os/Packages/k/kvantum-data-1.1.6-1.fc44.noarch.rpm
     state: present
     disable_gpg_check: true
 
@@ -37,45 +37,14 @@
     name:
       - krfb
 
-- name: Enable SDDM
-  ansible.builtin.systemd_service:
-    name: sddm
-    enabled: true
+- name: Enable Plasma Login Manager
+  ansible.builtin.file:
+    src: /usr/lib/systemd/system/plasmalogin.service
+    dest: /etc/systemd/system/display-manager.service
+    state: link
 
 - name: Disable Cockpit
   ansible.builtin.systemd_service:
     name: cockpit.socket
     enabled: false
 
-- name: Create script for /usr/share/sddm/themes overlay
-  ansible.builtin.copy:
-    content: |
-      #!/usr/bin/env bash
-      umount \
-        /usr/share/sddm/themes
-      mkdir -p \
-        /var/usr_share_sddm_themes
-      mkdir -p \
-        /var/usr_share_sddm_themes_work
-      mount -t overlay overlay \
-        -o lowerdir=/usr/share/sddm/themes,upperdir=/var/usr_share_sddm_themes,workdir=/var/usr_share_sddm_themes_work \
-        /usr/share/sddm/themes
-    dest: /usr/bin/heliumos-usr-share-sddm-themes-overlay
-    mode: "0755"
-
-- name: Create service for /usr/share/sddm/themes overlay
-  ansible.builtin.copy:
-    content: |
-      [Unit]
-      Description=Setup /usr/share/sddm/themes overlay
-
-      [Service]
-      Type=oneshot
-      ExecStart=/usr/bin/bash -c '/usr/bin/heliumos-usr-share-sddm-themes-overlay'
-    dest: /usr/lib/systemd/system/heliumos-usr-share-sddm-themes-overlay.service
-
-- name: Enable service for /usr/share/sddm/themes overlay
-  ansible.builtin.file:
-    src: /usr/lib/systemd/system/heliumos-usr-share-sddm-themes-overlay.service
-    dest: /etc/systemd/system/multi-user.target.wants/heliumos-usr-share-sddm-themes-overlay.service
-    state: link

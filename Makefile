@@ -19,7 +19,7 @@ ifeq ($(IS_EDGE),true)
 	PLAYBOOK := $(PLAYBOOK)-edge
 endif
 
-.PHONY: echo-image echo-tag image push iso
+.PHONY: echo-image echo-tag image rechunk push iso
 
 echo-image:
 	@echo $(IMAGE)
@@ -36,20 +36,32 @@ image:
 		-t $(IMAGE):$(TAG) \
 		.
 
+RECHUNK_DIR := .rechunked
+RECHUNK_TAG := chunked
+
 rechunk:
+	$(SUDO) rm -rf $(RECHUNK_DIR)
+	mkdir -p $(RECHUNK_DIR)
+	echo '{"imageLayoutVersion":"1.0.0"}' > $(RECHUNK_DIR)/oci-layout
+	echo '{"schemaVersion":2,"manifests":[]}' > $(RECHUNK_DIR)/index.json
 	$(PODMAN) run \
-	    --rm \
+		--rm \
 		--privileged \
 		-v /var/lib/containers:/var/lib/containers \
-        quay.io/almalinuxorg/almalinux-bootc:$(VERSION) \
-        /usr/libexec/bootc-base-imagectl rechunk \
-            --max-layers 100 \
-            $(IMAGE):$(TAG) \
-            $(IMAGE):$(TAG)
+		-v /var/tmp:/var/tmp \
+		-v $(CURDIR)/$(RECHUNK_DIR):/out \
+		quay.io/almalinuxorg/almalinux-bootc:$(VERSION) \
+		rpm-ostree experimental compose build-chunked-oci \
+			--bootc \
+			--format-version=1 \
+			--max-layers=100 \
+			--from=$(IMAGE):$(TAG) \
+			--output=oci:/out:$(RECHUNK_TAG)
 
 push:
-	$(PODMAN) push \
-		$(IMAGE):$(TAG)
+	$(SUDO) skopeo copy \
+		oci:$(CURDIR)/$(RECHUNK_DIR):$(RECHUNK_TAG) \
+		docker://$(IMAGE):$(TAG)
 
 iso:
 	$(SUDO) rm -rf ./out
